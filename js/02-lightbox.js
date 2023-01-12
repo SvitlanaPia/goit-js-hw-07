@@ -17,29 +17,19 @@ function createPhotoElements(photos) {
 const createdPhotos = createPhotoElements(galleryItems);
 galleryEl.innerHTML = createdPhotos;
 
+const originalPhoto = new SimpleLightbox(".gallery a", {
+  captionsData: `alt`,
+  captionDelay: 250,
+});
+
 galleryEl.addEventListener("click", onGalleryItemElClick);
 
 function onGalleryItemElClick(event) {
-  blockDefaultAction(event);
+  event.preventDefault();
 
   const { target } = event;
 
   if (target.nodeName !== "IMG") {
     return;
   }
-
-  const originalPhoto = new SimpleLightbox(".gallery a", {
-    captionsData: `alt`,
-    captionDelay: 250,
-  });
-
-  galleryEl.addEventListener("keydown", (event) => {
-    if (event.code === "Escape") {
-      close.simplelightbox();
-    }
-  });
-}
-
-function blockDefaultAction(event) {
-  event.preventDefault();
 }

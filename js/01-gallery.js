@@ -28,7 +28,7 @@ galleryEl.innerHTML = createdPhotos;
 galleryEl.addEventListener("click", onGalleryItemElClick);
 
 function onGalleryItemElClick(event) {
-  blockDefaultAction(event);
+  event.preventDefault();
 
   const { target } = event;
 
@@ -36,18 +36,26 @@ function onGalleryItemElClick(event) {
     return;
   }
 
-  const originalPhoto = basicLightbox.create(`
-    <img src="${target.dataset.source}" width="800" height="600">
- `);
+  const originalPhoto = basicLightbox.create(
+    `
+  <img src="${target.dataset.source}" width="800" height="600">
+`,
+    {
+      onShow: (instance) => {
+        document.addEventListener("keydown", onEscapePress);
+      },
+
+      onClose: (instance) => {
+        document.removeEventListener("keydown", onEscapePress);
+      },
+    }
+  );
+
   originalPhoto.show();
 
-  galleryEl.addEventListener("keydown", (event) => {
+  function onEscapePress(event) {
     if (event.code === "Escape") {
       originalPhoto.close();
     }
-  });
-}
-
-function blockDefaultAction(event) {
-  event.preventDefault();
+  }
 }
